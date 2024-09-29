@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "hpt"
+version = "0.0.1"
+authors = [
+  { name="Lirui Wang", email="liruiw@mit.edu" },
+]
+description = "evaluating HPTs for robotics"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Ubuntu",
+]
+dependencies = [
+        "gymnasium>=0.29.0",
+        "mujoco-py",
+        "Cython==0.29.36",
+        "numpy==1.24.3",
+        "scipy==1.10.1",
+        "imageio==2.27.0",
+        "torch==2.1.1",
+        "torchvision==0.16.1",
+        "seaborn==0.13.0",
+        "dm-control",
+        "ray==2.7.1",
+        "scikit-learn==1.3.2",
+        "hydra-core==1.3.2",
+        "transforms3d==0.4.1",
+        "easydict==1.11",
+        "tqdm==4.66.1",
+        "opencv-python==4.8.1.78",
+        "lxml==4.9.3",
+        "matplotlib==3.7.4",
+        "protobuf==3.20.3",
+        "wandb==0.16.1",
+        "gym==0.26.2",
+        "transformers==4.36.0",
+        "GPUtil==1.4.0",
+        "tensorflow-datasets==4.9.2",
+        "pyvirtualdisplay==3.0",
+        "rlds==0.1.8",
+        "tfp-nightly==0.22.0.dev20231002",
+        "zarr==2.16.1",
+        "tensorflow==2.13.1",
+        "tabulate==0.9.0",
+        "timm==0.9.12",
+        "IPython",
+        "einops==0.7.0",
+        "dm-reverb[tensorflow]",
+        "colored==1.4.4",
+        "pytest",
+        "hydra-joblib-launcher",
+        "timm"
+]
+
+
+[tool.black]
+line-length = 120
+
+[tool.setuptools.packages]
+find = { include = ["src"] }
+

@@ -1,0 +1,23 @@
+# @package _global_
+ 
+dataloader:
+  batch_size: 1
+ 
+val_dataloader:
+  batch_size: 1
+
+train:
+  total_epochs: 1
+  total_iters: 1000
+  epoch_iters: 1
+  validation_iters: 1 
+
+eval:
+  total_iters: 1  
+  epoch_iters: 1    
+
+rollout_runner:
+  episode_num: 1
+
+dataset:
+  episode_cnt: 10

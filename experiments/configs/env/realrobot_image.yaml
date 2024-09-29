@@ -1,0 +1,48 @@
+# @package _global_
+cross_validate: False
+save_intermedia_models: True
+
+dataset_generator_func:
+  _target_: env.realworld.rollout_runner.convert_dataset_image
+  episode_num_pertask: 10000 
+  env_names: ["RealRobotDrakeHammerforhammerEnv-Tool"]
+
+# test
+rollout_runner:
+  _target_: env.realworld.rollout_runner.RolloutRunner
+  episode_num: 50
+  env_names: ["DrakeHammerEnv"]
+  save_video: True
+
+dataloader:
+  batch_size: 256 
+  num_workers: 4
+  pin_memory: True
+  persistent_workers: False
+
+val_dataloader:
+  batch_size: 256
+
+dataset:
+  _target_: hpt.dataset.local_traj_dataset.LocalTrajDataset
+  use_multiview: True
+  observation_horizon: 2
+  use_disk: True
+
+head:
+  _target_: hpt.models.policy_head.MLP
+  input_dim: ${network.embed_dim}
+  tanh_end: True # normalized action output
+  output_dim: -1 # overwrite based on dataset
+  widths: [256, 128]
+  normalize_action: ${head.tanh_end}
+  dropout: True
+
+train:
+  total_epochs: 3000  # maximum training epochs before termination
+  total_iters: 20000 # maximum training steps before termination
+  epoch_iters: 1000  # training steps in each epoch
+  validation_iters: 100 # maximum iterations for validation
+
+
+domains: real_robot_image

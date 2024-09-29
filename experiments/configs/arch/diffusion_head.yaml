@@ -1,0 +1,52 @@
+# @package _global_
+
+stem:
+  image:
+    _target_: hpt.models.policy_stem.MLP
+    input_dim: 512
+    output_dim: ${network.embed_dim}
+    widths: [128]
+    num_of_copy: 1
+ 
+    
+  state:
+    _target_: hpt.models.policy_stem.MLP
+    input_dim: 1 # ovewrite based on the dataset
+    output_dim: ${network.embed_dim}
+    widths:  [128]
+
+    
+head:
+    _target_: hpt.models.diffusion_policy_head.DiffusionPolicy
+    action_horizon: ${dataset.action_horizon} # normalized action output
+    output_dim: -1 # overwrite based on dataset
+    normalize_action: True
+
+    model:
+      _target_:  hpt.utils.conditional_unet1d.ConditionalUnet1D
+      input_dim: ${head.output_dim}
+      # the same as the output dim for unet
+      local_cond_dim: null
+      global_cond_dim: ${network.embed_dim} 
+      diffusion_step_embed_dim: 32
+      down_dims: [64, 128]
+      kernel_size: 3
+      n_groups: 8
+      cond_predict_scale: True
+
+    noise_scheduler:
+      _target_: hpt.utils.scheduling_ddim.DDIMScheduler
+      num_train_timesteps: 100
+      beta_start: 0.0001
+      beta_end: 0.02
+      beta_schedule: squaredcos_cap_v2
+      clip_sample: True
+      set_alpha_to_one: True
+      steps_offset: 0
+      prediction_type: epsilon # or sample
+
+dataset:
+    action_multiple_horizon: False
+
+train:
+  total_iters: 80000

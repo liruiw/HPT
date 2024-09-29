@@ -1,0 +1,4 @@
+# @package _global_
+lr_scheduler: 
+  _target_: torch.optim.lr_scheduler.ConstantLR
+  factor: 1 # no decay

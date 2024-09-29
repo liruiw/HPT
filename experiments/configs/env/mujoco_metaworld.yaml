@@ -1,0 +1,28 @@
+# @package _global_
+cross_validate: False
+dataset_generator_func:
+  _target_: env.mujoco.metaworld.rollout_runner.generate_dataset_rollouts
+  env_names: ["reach-v2", "push-v2", "button-press-topdown-v2", "door-open-v2" ]
+  max_total_transition: 500000 
+  episode_num_pertask:  ${dataset.episode_cnt}
+  save_video: False
+  use_image: True
+
+# test
+rollout_runner:
+  _target_: env.mujoco.metaworld.rollout_runner.RolloutRunner
+  episode_num: 50
+  env_names: ["reach-v2", "push-v2", "button-press-topdown-v2", "door-open-v2" ]
+  save_video: True
+
+
+# training config
+train:
+  total_epochs: 1000  # maximum training epochs before termination. usually set as maximum
+  total_iters: 20000 # maximum training steps before termination
+  epoch_iters: 1000  # training steps in each epoch
+  validation_iters: 100 # maximum iterations for validation
+  pretrained_dir: "" # pretrained model path for testing
+  freeze_trunk: False # whether to freeze the trunk during finetuning
+
+env_names: ${rollout_runner.env_names}

@@ -1,0 +1,18 @@
+# @package _global_
+
+dataset_generator_func:
+  _target_: env.mujoco.metaworld.rollout_runner.generate_dataset_rollouts
+  env_names: ["reach-v2"]
+  max_total_transition: 500000 
+  episode_num_pertask: ${dataset.episode_cnt}
+  save_video: False
+  use_image: True
+
+# test
+rollout_runner:
+  _target_: env.mujoco.metaworld.rollout_runner.RolloutRunner
+  episode_num: 30
+  env_names: ["reach-v2"]
+  save_video: False
+
+domains: mujoco_metaworld_task1
