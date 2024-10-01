@@ -1,7 +1,7 @@
 # 🦾 Heterogenous Pre-trained Transformers
 [![HF Models](https://img.shields.io/badge/%F0%9F%A4%97-Models-yellow?style=flat-square)](https://huggingface.co/liruiw/hpt-base)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
-[![Paper](https://badgen.net/badge/icon/arXiv?icon=awesome&label&color=red&style=flat-square)]()
+[![Paper](https://badgen.net/badge/icon/arXiv?icon=awesome&label&color=red&style=flat-square)](http://arxiv.org/abs/2409.20537)
 [![Website](https://img.shields.io/badge/Website-hpt-blue?style=flat-square)](https://liruiw.github.io/hpt)
 [![Python](https://img.shields.io/badge/Python-%3E=3.8-blue?style=flat-square)]()
 [![PyTorch](https://img.shields.io/badge/PyTorch-%3E=2.0-orange?style=flat-square)]()
