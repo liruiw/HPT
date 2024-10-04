@@ -15,7 +15,7 @@ Neural Information Processing Systems (Spotlight), 2024
 <hr style="border: 2px solid gray;"></hr>
 
 
-This is a pytorch implementation for pre-training Heterogenous Pre-trained Transformers (HPTs). The pre-training procedure train on mixture of embodiment datasets with a supervised learning objective. The pre-training process can take some time, so we also provide pre-trained checkpoints below. You can find more details on our [project page](https://liruiw.github.io/hpt). An alternative clean implementation of HPT in Hugging Face can also be found [here](https://github.com/liruiw/lerobot/tree/hpt_squash/lerobot/common/policies/hpt).
+This is a pytorch implementation for pre-training Heterogenous Pre-trained Transformers (HPTs). The pre-training procedure train on mixture of embodiment datasets with a supervised learning objective. The pre-training process can take some time, so we also provide pre-trained checkpoints below. You can find more details on our [project page](https://liruiw.github.io/hpt). An alternative clean implementation of HPT in Hugging Face can also be found [here](https://github.com/liruiw/lerobot/).
 
 
 **TL;DR:** HPT aligns different embodiment to a shared latent space and investigates the scaling behaviors in policy learning. Put a scalable transformer in the middle of your policy and don’t train from scratch!
@@ -25,7 +25,7 @@ This is a pytorch implementation for pre-training Heterogenous Pre-trained Trans
 
 ## ⚙️ Setup
 1. ```pip install -e .```
-2. This repository should share the `data` folder and the `output` folder as the [pretraining repo](https://github.com/liruiw/HPT-pretrain).
+
 
 <details>
 <summary><span style="font-weight: bold;">Install (old-version) Mujoco</span></summary>
