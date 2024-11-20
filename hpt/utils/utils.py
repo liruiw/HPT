@@ -175,16 +175,14 @@ def set_seed(seed):
 def get_sinusoid_encoding_table(position_start, position_end, d_hid):
     """Sinusoid position encoding table"""
 
-    # TODO: make it with torch instead of numpy
-    def get_position_angle_vec(position):
-        return [position / np.power(10000, 2 * (hid_j // 2) / d_hid) for hid_j in range(d_hid)]
+    d_vec = (1. / torch.pow(10000, 2 * (torch.arange(d_hid) / 2).floor_() / d_hid)).unsqueeze(0).float()
 
-    sinusoid_table = np.array([get_position_angle_vec(pos_i) for pos_i in range(position_start, position_end)])
-    sinusoid_table[:, 0::2] = np.sin(sinusoid_table[:, 0::2])  # dim 2i
-    sinusoid_table[:, 1::2] = np.cos(sinusoid_table[:, 1::2])  # dim 2i+1
+    sinusoid_table = torch.arange(position_start, position_end).unsqueeze(1) * d_vec
 
-    return torch.FloatTensor(sinusoid_table).unsqueeze(0)
+    sinusoid_table[:, 0::2] = torch.sin(sinusoid_table[:, 0::2])  # dim 2i
+    sinusoid_table[:, 1::2] = torch.cos(sinusoid_table[:, 1::2])  # dim 2i+1
 
+    return sinusoid_table.unsqueeze(0)
 
 def unnormalize_image_numpy(image):
     """
