@@ -262,7 +262,9 @@ class ResNet(PolicyStem):
             x = x.view(-1, 3, H, W)
             feat = self.net(x)
         # concat along time
-        feat = feat.reshape(B, -1, feat.shape[-1]).contiguous()
+        feat = feat.reshape(B, feat.shape[1], -1).contiguous()
+        feat = rearrange(feat, "B L T -> B T L") # (batchsize, number of tokens, resnet feature dimension=512)
+        feat = self.proj(feat) # project to (batchsize, number of tokens, output_dim)
         return feat
 
 
