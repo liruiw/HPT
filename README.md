@@ -78,7 +78,7 @@ You can find pretrained HPT checkpoints here. At the moment we provide the follo
 | [HPT-Large](https://huggingface.co/liruiw/hpt-large)                 |  50.5M Params  |
 | [HPT-Base](https://huggingface.co/liruiw/hpt-base)                 |  12.6M Params  |
 | [HPT-Small](https://huggingface.co/liruiw/hpt-small)                 |  3.1M Params   |
-| [HPT-Large (With Language)](https://huggingface.co/liruiw/hpt-base-lang)       |  50.6M Params  |
+| [HPT-Base (With Language)](https://huggingface.co/liruiw/hpt-base-lang)       |  50.6M Params  |
 
 
 ---
