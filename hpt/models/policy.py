@@ -250,7 +250,8 @@ class Policy(nn.Module):
             if modality not in data:
                 continue
 
-            if "image" in modality and "image" in self.encoders:  # finetuning with encoders
+            use_raw_image = "image" in modality and "image" in self.encoders
+            if use_raw_image:  # finetuning with encoders
                 data[modality] = self.encoders["image"](data[modality])
 
             # positional embedding for observations
@@ -264,10 +265,10 @@ class Policy(nn.Module):
 
             # data is N x T x M x ... x D where M is the # of instances for that sensor
             positional_embedding = get_sinusoid_encoding_table(
-                0, horizon * int(np.prod(data_shape[2:-1])), data_shape[-1]
-            ).to(data[modality])
+                0, horizon * int(np.prod(data_shape[2:-1])), data_shape[-1]).to(data[modality])
             positional_embedding = einops.repeat(positional_embedding, "b h w -> (repeat b) h w", repeat=data_shape[0])
-            data[modality] = data[modality] + positional_embedding.view(data[modality].shape)
+            if not use_raw_image:
+                data[modality] = data[modality] + positional_embedding.view(data[modality].shape)
             stem_token = stem.compute_latent(data[modality])
             feats.append(stem_token)
 
