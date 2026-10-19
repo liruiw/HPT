@@ -38,8 +38,8 @@ def resolve_device(device: DeviceLike = None) -> torch.device:
 def empty_cache(device: DeviceLike = None) -> None:
     """Release cached allocator blocks of ``device``'s backend; no-op on CPU.
 
-    ``torch.cuda.empty_cache()`` is not safe to call blindly: it is a no-op on an
-    uninitialised CUDA, but it has no meaning for an XPU or CPU run.
+    ``torch.cuda.empty_cache()`` has no meaning for an XPU or CPU run, so the call
+    is routed to the backend that holds the model.
     """
     device_type = resolve_device(device).type
     if device_type == "xpu" and is_available("xpu"):

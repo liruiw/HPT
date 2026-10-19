@@ -32,7 +32,6 @@ In step 1, drop the `torch` and `torchvision` pins from `pyproject.toml` (they a
 pip install torch torchvision --index-url https://download.pytorch.org/whl/xpu
 ```
 The device is picked automatically (XPU, then CUDA, then CPU), so the commands above and `quickstart.ipynb` run unchanged. To force one, pass `+device=xpu` to `python -m hpt.run_eval`. The default ResNet image encoder weights are downloaded without a token.
-Training (`hpt.run`, `hpt.train_test`) is not covered and still assumes CUDA.
 
 
 <details>
