@@ -6,6 +6,7 @@ import os
 import hydra
 
 from hpt.utils import utils
+from hpt.utils.device import resolve_device
 from hpt import train_test
 import numpy as np
 
@@ -19,7 +20,7 @@ def run_eval(cfg):
     utils.set_seed(cfg.seed)
     print(cfg)
 
-    device = "cuda"
+    device = resolve_device(cfg.get("device", None))
     domain_list = [d.strip() for d in cfg.domains.split(",")]
     domain = domain_list[0]
 
@@ -33,7 +34,7 @@ def run_eval(cfg):
 
     # add encoders into policy parameters
     if cfg.network.finetune_encoder:
-        utils.get_image_embeddings(np.zeros((320, 240, 3), dtype=np.uint8), cfg.dataset.image_encoder)
+        utils.get_image_embeddings(np.zeros((320, 240, 3), dtype=np.uint8), cfg.dataset.image_encoder, device=device)
         from hpt.utils.utils import global_vision_model
         policy.init_encoders("image", global_vision_model)
 

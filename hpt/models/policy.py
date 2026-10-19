@@ -493,7 +493,7 @@ class Policy(nn.Module):
         for img_key in data_img.keys():
             if self.stem_spec.precompute_feat and "image" not in self.encoders:
                 # precomputed
-                img_embedding = get_image_embeddings(data[img_key], self.stem_spec.image_encoder)
+                img_embedding = get_image_embeddings(data[img_key], self.stem_spec.image_encoder, device=device)
                 img_queue.append(torch.FloatTensor(img_embedding).to(device).float())
             else:
                 # raw inputs

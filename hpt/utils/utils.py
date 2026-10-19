@@ -17,6 +17,7 @@ from transformers import AutoImageProcessor, Dinov2Model, AutoProcessor
 
 import gc
 from ..models.policy_stem import vit_base_patch16, ResNet
+from .device import empty_cache, resolve_device
 import einops
 import json
 import tabulate
@@ -264,7 +265,7 @@ def download_from_huggingface(huggingface_repo_id: str):
     folder = huggingface_hub.snapshot_download(huggingface_repo_id)
     return folder
 
-def get_image_embeddings(image, encoder, language=None, device="cuda", downsample=False, **kwargs):
+def get_image_embeddings(image, encoder, language=None, device=None, downsample=False, **kwargs):
     """
     Get embeddings for an image using the specified encoder.
 
@@ -272,7 +273,7 @@ def get_image_embeddings(image, encoder, language=None, device="cuda", downsampl
         image: The input image.
         encoder: The type of encoder to use for generating embeddings.
         language: The language used for encoding (optional).
-        device: The device to use for computation (default is "cuda").
+        device: The device to use for computation (default is the best available backend: xpu, cuda or cpu).
         downsample: Whether to downsample the image (default is False).
         **kwargs: Additional keyword arguments.
 
@@ -307,8 +308,9 @@ def tokenize_language(sentence: str):
     return token_ids[0]
 
 @torch.no_grad()
-def get_dino_embeddings(image, device="cuda", image_token_size=(3, 3)):
+def get_dino_embeddings(image, device=None, image_token_size=(3, 3)):
     """Get DINO embedding."""
+    device = resolve_device(device)
     global global_vision_model, global_vision_processor
     if global_vision_model is None:
         global_vision_model = Dinov2Model.from_pretrained("facebook/dinov2-base")
@@ -327,13 +329,14 @@ def get_dino_embeddings(image, device="cuda", image_token_size=(3, 3)):
 
     # garbage collection
     gc.collect()
-    torch.cuda.empty_cache()
+    empty_cache(device)
     return img_embeds_numpy[0]
 
 
 @torch.no_grad()
-def get_clip_embeddings(image, language="", device="cuda", max_length=77, image_token_size=(3, 3), resize=True):
+def get_clip_embeddings(image, language="", device=None, max_length=77, image_token_size=(3, 3), resize=True):
     """Get CLIP embedding."""
+    device = resolve_device(device)
     global global_vision_model, global_vision_processor, global_language_model, global_language_processor
     if global_vision_model is None:
         global_vision_model = CLIPVisionModel.from_pretrained("openai/clip-vit-base-patch32").to(device)
@@ -366,7 +369,7 @@ def get_clip_embeddings(image, language="", device="cuda", max_length=77, image_
     # garbage collection
     del vision_outputs, text_outputs
     gc.collect()
-    torch.cuda.empty_cache()
+    empty_cache(device)
     return text_embeds_numpy[0], img_embeds_numpy[0]
 
 
@@ -390,7 +393,7 @@ def get_t5_embeddings(language, per_token=True, max_length=16, device="cpu"):
     output = global_language_model.encoder(
         input_ids=enc["input_ids"], attention_mask=enc["attention_mask"], return_dict=True
     )
-    torch.cuda.empty_cache()
+    empty_cache(device)
     if per_token:
         return output.last_hidden_state[0].detach().cpu().numpy()
     else:
@@ -399,8 +402,9 @@ def get_t5_embeddings(language, per_token=True, max_length=16, device="cpu"):
         return emb
 
 @torch.no_grad()
-def get_vit_embeddings(image, per_token=False, device="cuda", downsample=False):
+def get_vit_embeddings(image, per_token=False, device=None, downsample=False):
     """Get VIT embedding. Input: H x W x 3"""
+    device = resolve_device(device)
     global global_vision_model
 
     if global_vision_model is None:
@@ -421,8 +425,9 @@ def get_vit_embeddings(image, per_token=False, device="cuda", downsample=False):
 
 
 @torch.no_grad()
-def get_resnet_embeddings(image, per_token=False, device="cuda", downsample=False):
+def get_resnet_embeddings(image, per_token=False, device=None, downsample=False):
     """Get Resnet embedding. Input: H x W x 3"""
+    device = resolve_device(device)
     global global_vision_model
 
     if global_vision_model is None:
@@ -444,9 +449,10 @@ def get_resnet_embeddings(image, per_token=False, device="cuda", downsample=Fals
 
 
 @torch.no_grad()
-def get_r3m_embeddings(image, per_token=False, device="cuda"):
+def get_r3m_embeddings(image, per_token=False, device=None):
     """Get Resnet embedding.
     H x W x 3 -> 1 x D"""
+    device = resolve_device(device)
     global global_vision_model
     if global_vision_model is None:
         from r3m import load_r3m
@@ -468,9 +474,10 @@ def get_r3m_embeddings(image, per_token=False, device="cuda"):
 
 
 @torch.no_grad()
-def get_voltron_embeddings(image, per_token=False, device="cuda"):
+def get_voltron_embeddings(image, per_token=False, device=None):
     """Get Resnet embedding.
     H x W x 3 -> 1 x D"""
+    device = resolve_device(device)
     global global_vision_model, global_vision_processor
     if global_vision_model is None:
         # install voltron from https://github.com/siddk/voltron-robotics 
